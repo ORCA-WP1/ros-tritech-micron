@@ -1,0 +1,47 @@
+frame_id : sonar                       # Reference frame from which we plot the points as markers, might not be implemented yet
+#need TF
+#pi/2 : 1.57079632679
+#pi   : 3.14159265359
+#2pi  : 6.28318530718
+
+
+#see sonar.py __init__ function for documentation
+ad_high : 80.0
+ad_low : 0.00
+adc8on : True
+continuous : True
+gain : 0.50
+inverted : False
+left_limit : 2.35619449019 #in file .. 2400 / 3200.0 * math.pi : 2.35619449019
+mo_time : 250
+nbins : 400
+range : 10.00
+right_limit : 3.92699081699 #in file .. 4000 / 3200.0 * math.pi : 3.92699081699
+scanright : True
+speed : 1500.0
+step : Resolution.LOW
+
+
+#The ones below are currently not supported to be set outside of drivers
+#but they could be changed by moving them (in sonar.py) to above the:
+# "Override defaults with key-word arguments or ROS parameters." section
+
+
+#port : "/dev/ttyUSB0"/
+#conn : None
+#initialized : False
+# Head info. 
+#centred : False
+#has_cfg : False
+#heading : None
+#motor_on : False
+#motoring : False
+#no_params : True
+#up_time : datetime.timedelta(0)
+#recentering : False
+#scanning : False
+
+# Additional properties.
+#clock : datetime.timedelta(0)
+#_time_offset : datetime.timedelta(0)
+#preempted : False

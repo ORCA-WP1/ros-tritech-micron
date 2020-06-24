@@ -6,15 +6,16 @@ This publishes one PointCloud message per scan slice. In order to visualize in
 rviz, play with the 'Decay Time' parameter. This node also provides parameters
 that can be dynamically reconfigured.
 """
-
+import numpy as np
 import rospy
-from sensor_msgs.msg import PointCloud
+from sensor_msgs.msg import PointCloud, PointCloud2, PointField, ChannelFloat32
+from sensor_msgs import point_cloud2 as pc2
 from tritech_micron import TritechMicron
 from geometry_msgs.msg import PoseStamped
 from tritech_micron.cfg import ScanConfig
 from dynamic_reconfigure.server import Server
 from tritech_micron.msg import TritechMicronConfig
-
+import struct
 __author__ = "Anass Al-Wohoush"
 
 
@@ -39,6 +40,16 @@ def reconfigure(config, level):
     sonar.set(**config)
     return config
 
+def convertPointCloudToPointCloud2(inp):
+    fields = []
+    pfNames = ['x', 'y', 'z', 'intensity']
+    pfOffset =[0,4,8,12]
+    for i in range(3 + len(inp.channels)):
+      fields.append(PointField(pfNames[i], pfOffset[i], PointField.FLOAT32, 1))
+    data = []  
+    for cp in range(len(inp.points)):
+      data.append([inp.points[cp].x, inp.points[cp].y ,inp.points[cp].z, inp.channels[0].values[cp]])
+    return pc2.create_cloud(inp.header, fields, data)
 
 def publish(sonar, slice):
     """Publishes PointCloud, PoseStamped and TritechMicronConfig of current
@@ -56,6 +67,11 @@ def publish(sonar, slice):
     # Publish data as PointCloud.
     cloud = slice.to_pointcloud(frame)
     scan_pub.publish(cloud)
+ 
+    
+    # Publish data as PointCloud2.
+    cloud2 = convertPointCloudToPointCloud2(cloud)
+    scan_pub2.publish(cloud2)
 
     # Publish data as TritechMicronConfig.
     config = slice.to_config(frame)
@@ -66,6 +82,8 @@ if __name__ == "__main__":
     # Initialize node and publishers.
     rospy.init_node("tritech_micron")
     scan_pub = rospy.Publisher("~scan", PointCloud, queue_size=800)
+    maxInt_pub = rospy.Publisher("~MaxInt", PointCloud, queue_size=800)
+    scan_pub2 = rospy.Publisher("~scan2", PointCloud2, queue_size=800)
     heading_pub = rospy.Publisher("~heading", PoseStamped, queue_size=800)
     conf_pub = rospy.Publisher("~config", TritechMicronConfig, queue_size=800)
 

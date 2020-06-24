@@ -1,6 +1,6 @@
 <launch>
   <!-- Read arguments -->
-  <arg name="port" default="/dev/sonar"/>
+  <arg name="port" default="/dev/ttyUSB0"/>
   <arg name="frame" default="sonar"/>
 
   <node name="tritech_micron"
@@ -12,5 +12,6 @@
     <!-- Set ROS parameters -->
     <param name="port" value="$(arg port)"/>
     <param name="frame" value="$(arg frame)"/>
+	<!--rosparam command="load" file="$(find tritech_micron)/parameters/params.yaml" /-->
   </node>
 </launch>
