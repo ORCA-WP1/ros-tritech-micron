@@ -1,4 +1,5 @@
 <launch>
+   <node pkg="tf2_ros" type="static_transform_publisher" name="sonar_2_bl" args="0 0 0 0 0 1 0 base_link sonar" />
   <!-- Read arguments -->
   <arg name="port" default="/dev/ttyUSB0"/>
   <arg name="frame" default="sonar"/>
@@ -12,6 +13,11 @@
     <!-- Set ROS parameters -->
     <param name="port" value="$(arg port)"/>
     <param name="frame" value="$(arg frame)"/>
-	<!--rosparam command="load" file="$(find tritech_micron)/parameters/params.yaml" /-->
+	 <rosparam command="load" file="$(find tritech_micron)/parameters/params.yaml"/>
   </node>
+  <node name="sonarFilter"
+        pkg="tritech_micron"
+        type="sonar_filter.py"
+        output="screen"
+  />
 </launch>

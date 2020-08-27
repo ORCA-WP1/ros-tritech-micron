@@ -9,17 +9,18 @@ frame_id : sonar                       # Reference frame from which we plot the 
 ad_high : 80.0
 ad_low : 0.00
 adc8on : True
-continuous : True
+continuous : False
 gain : 0.50
 inverted : False
 left_limit : 2.35619449019 #in file .. 2400 / 3200.0 * math.pi : 2.35619449019
 mo_time : 250
-nbins : 400
+nbins : 50
 range : 10.00
 right_limit : 3.92699081699 #in file .. 4000 / 3200.0 * math.pi : 3.92699081699
 scanright : True
 speed : 1500.0
-step : Resolution.LOW
+step : LOWEST
+#  self.step_resolution_dict = {"LOWEST" : Resolution.LOWEST, "LOWERISH" : Resolution.LOWERISH, "LOWER" : Resolution.LOWER, "LOW" : Resolution.LOW, "MEDIUM" : Resolution.MEDIUM, "HIGH" : Resolution.HIGH, "ULTIMATE" : Resolution.ULTIMATE}
 
 
 #The ones below are currently not supported to be set outside of drivers

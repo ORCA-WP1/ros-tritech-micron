@@ -69,17 +69,19 @@ class TritechMicron(object):
         self.ad_high = 80.0
         self.ad_low = 0.00
         self.adc8on = True
-        self.continuous = True
+        self.continuous = False
         self.gain = 0.50
         self.inverted = False
-        self.left_limit = to_radians(2400)
+        self.left_limit = to_radians(135)
         self.mo_time = 250
         self.nbins = 400
         self.range = 10.00
-        self.right_limit = to_radians(4000)
+        self.right_limit = to_radians(225)
         self.scanright = True
         self.speed = 1500.0
         self.step = Resolution.LOW
+
+        self.step_resolution_dict = {"LOWEST" : Resolution.LOWEST, "LOWERISH" : Resolution.LOWERISH, "LOWER" : Resolution.LOWER, "LOW" : Resolution.LOW, "MEDIUM" : Resolution.MEDIUM, "HIGH" : Resolution.HIGH, "ULTIMATE" : Resolution.ULTIMATE}
 
         # Override defaults with key-word arguments or ROS parameters.
         for key, value in self.__dict__.iteritems():
@@ -89,7 +91,12 @@ class TritechMicron(object):
                 param = "{}/{}".format(rospy.get_name(), key)
                 if rospy.has_param(param):
                     self.__setattr__(key, rospy.get_param(param))
-
+        
+        if self.step in self.step_resolution_dict:
+            print "STEP 1: ", self.step
+            self.step = self.step_resolution_dict[self.step]
+            print "STEP 2: ", self.step
+        
         # Connection properties.
         self.port = port
         self.conn = None
@@ -321,6 +328,10 @@ class TritechMicron(object):
                     if key != "scanright":
                         only_reverse = False
 
+        if self.step in self.step_resolution_dict:
+            print "STEP 1: ", self.step
+            self.step = self.step_resolution_dict[self.step]
+            print "STEP 2: ", self.step
         # Return if unnecessary.
         if not necessary:
             rospy.logwarn("Parameters are already set")
@@ -424,6 +435,7 @@ class TritechMicron(object):
         #   16: medium resolution
         #   8:  high resolution
         #   4:  ultimate resolution
+        print self.step, " typ ", type(self.step)
         _step_size = to_sonar_angles(self.step)
         step = bitstring.pack("uint:8", _step_size)
 
@@ -496,6 +508,7 @@ class TritechMicron(object):
         """
         # Any number of exceptions could occur here if the packet is corrupted,
         # so a catch-all approach is used for safety.
+        
         try:
             # Get the total number of bytes.
             count = data.read(16).uintle
@@ -534,10 +547,10 @@ class TritechMicron(object):
             #   5: Scan at center position.
             sweep = data.read(8).uint
             rospy.logdebug("Sweep code is %d", sweep)
-            if sweep == 1:
-                rospy.loginfo("Reached left limit")
-            elif sweep == 2:
-                rospy.loginfo("Reached right limit")
+            #if sweep == 1:
+            #    rospy.loginfo("Reached left limit")
+            #elif sweep == 2:
+            #    rospy.loginfo("Reached right limit")
 
             # Get the HdCtrl bytes to control operation:
             #   Bit 0:  adc8on          0: 4-bit        1: 8-bit
@@ -623,7 +636,7 @@ class TritechMicron(object):
 
             # Heading is in units of 1/16th of a gradian.
             self.heading = to_radians(data.read(16).uintle)
-            rospy.loginfo("Heading is now %f", self.heading)
+            #rospy.loginfo("Heading is now %f", self.heading)
 
             # Dbytes is the number of bytes with data to follow.
             dbytes = data.read(16).uintle

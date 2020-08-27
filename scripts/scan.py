@@ -70,8 +70,8 @@ def publish(sonar, slice):
  
     
     # Publish data as PointCloud2.
-    cloud2 = convertPointCloudToPointCloud2(cloud)
-    scan_pub2.publish(cloud2)
+    #cloud2 = convertPointCloudToPointCloud2(cloud)
+    #scan_pub2.publish(cloud2)
 
     # Publish data as TritechMicronConfig.
     config = slice.to_config(frame)
@@ -82,8 +82,8 @@ if __name__ == "__main__":
     # Initialize node and publishers.
     rospy.init_node("tritech_micron")
     scan_pub = rospy.Publisher("~scan", PointCloud, queue_size=800)
-    maxInt_pub = rospy.Publisher("~MaxInt", PointCloud, queue_size=800)
-    scan_pub2 = rospy.Publisher("~scan2", PointCloud2, queue_size=800)
+    #maxInt_pub = rospy.Publisher("~MaxInt", PointCloud, queue_size=800)
+    #scan_pub2 = rospy.Publisher("~scan2", PointCloud2, queue_size=800)
     heading_pub = rospy.Publisher("~heading", PoseStamped, queue_size=800)
     conf_pub = rospy.Publisher("~config", TritechMicronConfig, queue_size=800)
 
