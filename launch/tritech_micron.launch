@@ -1,5 +1,6 @@
 <launch>
-  <arg name="port" default="/dev/sonar" doc="serial port"/>
+   <node pkg="tf2_ros" type="static_transform_publisher" name="sonar_to_base" args="0 0 0 0 0 1 0 base_link sonar" />
+  <arg name="port" default="/dev/pts/0" doc="serial port"/>
   <arg name="baudrate" default="115200" doc="serial baud rate"/>
   <arg name="frame" default="sonar" doc="frame ID"/>
 

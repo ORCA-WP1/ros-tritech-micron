@@ -40,7 +40,7 @@ def parse_row(row):
     right_limit = to_radians(int(row[11]))
     step = to_radians(int(row[12]))
     heading = to_radians(int(row[13]))
-    rospy.loginfo("Heading is now %f", heading)
+    #rospy.loginfo("Heading is now %f", heading)
 
     # Get the head status byte:
     #   Bit 0:  'HdPwrLoss'. Head is in Reset Condition.

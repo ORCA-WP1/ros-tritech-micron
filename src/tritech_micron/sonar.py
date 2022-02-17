@@ -482,6 +482,7 @@ class TritechMicron(object):
         self._time_offset = current_time - self.up_time
 
         # Send command.
+        #print("Sending : ", Message.SEND_DATA, payload)
         self.send(Message.SEND_DATA, payload)
 
     def __parse_head_data(self, data):
@@ -625,7 +626,7 @@ class TritechMicron(object):
 
             # Heading is in units of 1/16th of a gradian.
             self.heading = to_radians(data.read(16).uintle)
-            rospy.loginfo("Heading is now %f", self.heading)
+            #rospy.loginfo("Heading is now %f", self.heading)
 
             # Dbytes is the number of bytes with data to follow.
             dbytes = data.read(16).uintle
